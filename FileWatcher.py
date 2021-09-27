@@ -60,9 +60,9 @@ def main():
         files to watch and where to copy them to.
     """)
 
-    parser.add_argument('find', help="The source directory to look for watch files in.", type=str)
-    parser.add_argument('dest', help='The target directory to copy the watched files to when changes are detected.', type=str)
-    parser.add_argument('-n', '--name', help='The name(s) of the files or pattern to use for finding files to watch. Case insensitive.', type=str, nargs='+')
+    parser.add_argument('find', help="The source directory to look for watch files in.")
+    parser.add_argument('dest', help='The target directory to copy the watched files to when changes are detected.')
+    parser.add_argument('-n', '--name', help='The name(s) of the files or pattern to use for finding files to watch.', nargs='+')
     parser.add_argument('-r', '--recursive', 
         help="""
             Search in subdirectories for files matching the source argument.
@@ -72,6 +72,12 @@ def main():
         """, 
         action='store_true'
     )
+
+    # Config file arguments
+    parser.add_argument('-a', '--add', help="Add file(s) and destinations to config file watch-list/ignore-list")
+    parser.add_argument('-d', '--delete', help="Remove file(s) and destinations from config file watch-list/ignore-list")
+    parser.add_argument('-i', '--ignore', help="This flag will add/remove files to/from the ignore list. Files in the ignore list will never be watched for changes.")
+    parser.add_argument('-c', '--conf', help="Start file watcher using settings in watch.config.json file to determine source files to watch and destinations to copy to.")
 
     args = parser.parse_args()
 
