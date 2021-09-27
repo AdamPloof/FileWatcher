@@ -22,35 +22,36 @@ class FileChangeWatcher():
             if watch_file['cached_mod_time'] != 0:
                 self.copyFile(watch_file)
 
-            for k, v in enumerate(self.watch_files):
-                if v['file'] == watch_file['file']:
-                    self.watch_files[k]['cached_mod_time'] = modified_time
+            for key, file in enumerate(self.watch_files):
+                if file['file'] == watch_file['file']:
+                    self.watch_files[key]['cached_mod_time'] = modified_time
                     break
 
     def copyFile(self, watch_file):
-        filename = watch_file['file']
         destination_filename = self.dest_path / watch_file['file']
 
+        # Make any subdirectories within the destination directory to mirror the source structure
         if not destination_filename.parent.exists():
             Path.mkdir(destination_filename.parent, parents=True)
 
         try:
-            shutil.copy2(filename, destination_filename)
+            shutil.copy2(watch_file['file'], destination_filename)
             print(f"File updated! Copying... {watch_file['file']} to {destination_filename}")
         except IOError as e:
             print('An error occured: ')
             print(e)
 
-def getFilePaths(source_dir, dest_dir, pattern, recursive=False):
-    if recursive:
-        all_files = list(source_dir.glob(f"**/{pattern}"))
-    else:
-        all_files = list(source_dir.glob(pattern))
-
+def getFilePaths(source_dir, dest_dir, filenames, recursive=False):
+    all_files = []
+    for name in filenames:
+        if recursive:
+            all_files.extend(list(source_dir.glob(f"**/{name}")))
+        else:
+            all_files.extend(list(source_dir.glob(name)))
+        
     files = [f for f in all_files if not '.git' in f.parts and dest_dir != f.parent and not f.is_dir()]
     return files
 
-# TODO: Take in arbitrary number of file names for the name arg
 def main():
     parser = argparse.ArgumentParser(description="""
         Provide a file or files to watch for changes. When a change is detected, copy
@@ -61,14 +62,14 @@ def main():
 
     parser.add_argument('find', help="The source directory to look for watch files in.", type=str)
     parser.add_argument('dest', help='The target directory to copy the watched files to when changes are detected.', type=str)
-    parser.add_argument('-n', '--name', help='The name of the file or pattern to use for finding files to watch. Case insensitive.', type=str)
+    parser.add_argument('-n', '--name', help='The name(s) of the files or pattern to use for finding files to watch. Case insensitive.', type=str, nargs='+')
     parser.add_argument('-r', '--recursive', 
         help="""
-                Search in subdirectories for files matching the source argument.
-                Watched files in child directories will be copied to directories of the same name within the destination in order to
-                maintain the structure of the source directory. This behavior can be overridden by specifying target destinations
-                on per file basis in a configuration file.
-            """, 
+            Search in subdirectories for files matching the source argument.
+            Watched files in child directories will be copied to directories of the same name within the destination in order to
+            maintain the structure of the source directory. This behavior can be overridden by specifying target destinations
+            on per file basis in a configuration file.
+        """, 
         action='store_true'
     )
 
