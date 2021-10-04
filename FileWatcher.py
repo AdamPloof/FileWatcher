@@ -154,8 +154,23 @@ def getFilePaths(source_dir, dest_dir, filenames, recursive=False):
         else:
             all_files.extend(list(source_dir.glob(name)))
         
-    files = [f for f in all_files if not '.git' in f.parts and dest_dir != f.parent and not f.is_dir()]
+    files = [f for f in all_files if not isDefaultIgnore(f, dest_dir)]
     return files
+
+def isDefaultIgnore(filepath, dest_dir):
+    is_default_ignore = False
+
+    if '.git' in filepath.parts:
+        is_default_ignore = True
+    elif dest_dir == filepath.parent:
+        is_default_ignore = True
+    elif filepath.is_dir():
+        is_default_ignore = True
+    elif 'wac.config.json' == filepath:
+        is_default_ignore = True
+
+    return is_default_ignore
+        
 
 def getCommandLineArgs():
     parser = argparse.ArgumentParser(description="""
@@ -235,9 +250,11 @@ def main():
         source_dir = Path(args.find)
         dest_dir = Path(args.dest)
 
-        # TODO: Handle empty name arg
-        files = getFilePaths(source_dir, dest_dir, args.name, args.recursive)
-        
+        try:
+            files = getFilePaths(source_dir, dest_dir, args.name, args.recursive)
+        except TypeError as err:
+            raise Exception('A filename or pattern must be provided by using the --name argument')
+
     if useConfigFile(args):
         config_manager = getConfigManager(args, files)
 
