@@ -81,29 +81,37 @@ class ConfigManager():
             if create_config_file.lower() == 'y' or create_config_file.lower() == 'yes':
                 with open(self.config_path, 'w+') as f:
                     blank_config = {
-                        'watch': [],
-                        'ignore': []
+                        'watch': {},
+                        'ignore': {}
                     }
                     json.dump(blank_config, f)
             else:
                 raise Exception('Could not load config file: File does not exit.')
 
         with open(self.config_path, 'r') as config_file:
-            self.config = json.load(config_file)
+            config = json.load(config_file)
+        
+        # Convert string to POSIX path
+        self.config = {}
+        self.config['watch'] = {str(dest): self.stringListToPath(paths) for (dest, paths) in config['watch'].items()}
+        self.config['ignore'] = self.stringListToPath(config['ignore'])
 
-    def addWatchFiles(self, filenames, destination):
-        if destination in self.config['watch']:
+    def addWatchFiles(self, filenames, dest):
+        dest_str = str(dest)
+        
+        if dest_str in self.config['watch']:
             for filename in filenames:
-                if not filename in self.config['watch'][destination]:
-                    self.config['watch'][destination].append(filename)
+                if not filename in self.config['watch'][dest_str]:
+                    self.config['watch'][dest_str].append(filename)
         else:
-            self.config['watch'][destination] = filenames
+            self.config['watch'][dest_str] = filenames
 
-    def removeWatchFiles(self, filenames):
-        for dest in self.config['watch']:
-            for filename in filenames:
-                if filename in self.config['watch'][dest]:
-                    self.config['watch'][dest].remove(filename)
+    def removeWatchFiles(self, filenames, dest):
+        dest_str = str(dest)
+
+        for filename in self.config['watch'][dest_str]:
+            if filename in filenames:
+                self.config['watch'][dest_str].remove(filename)
 
     def addIgnoreFiles(self, filenames):
         for filename in filenames:
@@ -115,9 +123,20 @@ class ConfigManager():
             if filename in self.config['ignore']:
                 self.config['ignore'].remove(filename)
 
+    def stringListToPath(self, str_paths):
+        return [Path(str_path) for str_path in str_paths]
+
+    def pathListToString(self, paths):
+        return [str(path) for path in paths]
+
     def writeConfigFile(self):
+        # Convert POSIX paths to strings so that they can be serialized
+        normalized_config = {}
+        normalized_config['watch'] = {str(dest): self.pathListToString(paths) for (dest, paths) in self.config['watch'].items()}
+        normalized_config['ignore'] = self.pathListToString(self.config['ignore'])
+
         with open(self.config_path, 'w') as config_file:
-            json.dump(self.config, config_file)
+            json.dump(normalized_config, config_file, indent='\t')
     
     def watch(self):
         for dest, files in self.config['watch'].items():
@@ -125,6 +144,8 @@ class ConfigManager():
             self.watcher.addWatchFiles(filtered_files, dest)
             self.watcher.startWatch()
 
+# Destination directory is needed here so that we an make sure to exclude watching
+# files in the destination directory when in recursive mode
 def getFilePaths(source_dir, dest_dir, filenames, recursive=False):
     all_files = []
     for name in filenames:
@@ -189,14 +210,14 @@ def getConfigManager(args, files):
         if args.ignore:
             config_manager.addIgnoreFiles(files)
         else:
-            config_manager.addWatchFiles(files)
+            config_manager.addWatchFiles(files, args.dest)
         
         config_manager.writeConfigFile()
     elif args.delete:
         if args.ignore:
             config_manager.removeIgnoreFiles(files)
         else:
-            config_manager.removeWatchFiles(files)
+            config_manager.removeWatchFiles(files, args.dest)
         
         config_manager.writeConfigFile()
 
@@ -213,6 +234,8 @@ def main():
     else:
         source_dir = Path(args.find)
         dest_dir = Path(args.dest)
+
+        # TODO: Handle empty name arg
         files = getFilePaths(source_dir, dest_dir, args.name, args.recursive)
         
     if useConfigFile(args):
