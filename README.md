@@ -1,4 +1,4 @@
-# WatchAndCopy (wac)
+# WatchAndCopy
 WatchAndCopy is a script that behaves a like a cross between the Unix `find` and `cp` utilities. It takes in a directory
 to look for files in, a destination directory to copy files to, and a list of filenames and/or patterns to find matching files by.
 The files that match the name or pattern are then watched for changes and when a change happens the modified file(s) are
