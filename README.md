@@ -36,7 +36,7 @@ positional arguments:\
 
 optional arguments:\
 &nbsp;&nbsp;&nbsp;&nbsp;-h, --help            show this help message and exit\
-&nbsp;&nbsp;&nbsp;&nbsp;-n NAME [NAME ...], --name NAME [NAME ...]\
+&nbsp;&nbsp;&nbsp;&nbsp;-n NAME [NAME ...], --name NAME [NAME ...]
                         The name(s) of the files or pattern to use for finding files to watch.\
 &nbsp;&nbsp;&nbsp;&nbsp;-r, --recursive       Search in subdirectories for files matching the source argument. Watched files in child directories will
                         be copied to directories of the same name within the destination in order to maintain the structure of
