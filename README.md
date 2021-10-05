@@ -11,14 +11,17 @@ can be created with the command line as well.
 ## Basic Examples
 These are just a few examples to give an idea of how this tool can be used.
 
-**Watch a specific file and copy to destination folder on change**
+**Watch a specific file and copy to destination folder on change**\
 `> python -m WatchAndCopy '.' 'myDestination/' --name 'myFile.txt'`
 
-**Watch all files of a given type and copy to destination folder on change**
+**Watch all files of a given type and copy to destination folder on change**\
 `> python -m WatchAndCopy 'myProjectDir/' 'myDestination/someSubfolder/' --name '*.php'`
 
-**Add files matching pattern to config file**
+**Add files matching pattern to config file**\
 `> python -m WatchAndCopy '.' 'myDestination/' --name 'myPattern*' --add`
+
+**Add multiple files to config file and watch**\
+`> python -m WatchAndCopy '.' 'myDestination/' --name 'myFile1.txt' 'myFile2.txt' 'myFile3.txt' --add --conf`
 
 ## Command Line Usage
 usage: WatchAndCopy.py [-h] [-n NAME [NAME ...]] [-r] [--conf] [-i] [-a | -d] [find] [dest]
@@ -27,23 +30,23 @@ Provide a file or files to watch for changes. When a change is detected, copy th
 complex watching and copying, FileWatcher can be used set up a wac.config.json file to be used to define which files to watch
 and where to copy them to.
 
-positional arguments:
-  find                  The source directory to look for watch files in.
+positional arguments:\
+  find                  The source directory to look for watch files in.\
   dest                  The target directory to copy the watched files to when changes are detected.
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -n NAME [NAME ...], --name NAME [NAME ...]
-                        The name(s) of the files or pattern to use for finding files to watch.
-  -r, --recursive       Search in subdirectories for files matching the source argument. Watched files in child directories will
-                        be copied to directories of the same name within the destination in order to maintain the structure of
-                        the source directory.
-  --conf                Start file watcher using settings in wac.config.json file to determine source files to watch and
-                        destinations to copy to.
-  -i, --ignore          This flag will add/remove files to/from the ignore list. Files in the ignore list will never be watched
-                        for changes.
-  -a, --add             Add file(s) and destinations to config file watch-list/ignore-list
-  -d, --delete          Remove file(s) and destinations from config file watch-list/ignore-list
+optional arguments:\
+  -h, --help            show this help message and exit\
+  -n NAME [NAME ...], --name NAME [NAME ...]\
+                        The name(s) of the files or pattern to use for finding files to watch.\
+  -r, --recursive       Search in subdirectories for files matching the source argument. Watched files in child directories will\
+                        be copied to directories of the same name within the destination in order to maintain the structure of\
+                        the source directory.\
+  --conf                Start file watcher using settings in wac.config.json file to determine source files to watch and\
+                        destinations to copy to.\
+  -i, --ignore          This flag will add/remove files to/from the ignore list. Files in the ignore list will never be watched\
+                        for changes.\
+  -a, --add             Add file(s) and destinations to config file watch-list/ignore-list\
+  -d, --delete          Remove file(s) and destinations from config file watch-list/ignore-list\
 
 ## Running from a Config File
 To run WatchAndCopy using a wac.config.json file run the program with either the `--conf` argument or with no arguments (positional or optional) 
