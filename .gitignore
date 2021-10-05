@@ -2,3 +2,4 @@ TestDir\
 Dest\
 *.txt
 wac.config.json
+__pycache__/

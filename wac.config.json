@@ -1,6 +1,6 @@
 {
 	"watch": {
-		"Dest/": [
+		"Dest": [
 			"testfileX.txt",
 			"testfile1.txt"
 		]
