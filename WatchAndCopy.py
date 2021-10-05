@@ -13,7 +13,7 @@ One particularly important function in this file is getFilePaths which is used t
 FileWatcher.addWatchFiles() method.
 """
 
-# Destination directory is needed here so that we an make sure to exclude watching
+# Destination directory is needed here so that we can make sure to exclude watching
 # files in the destination directory when in recursive mode
 def getFilePaths(source_dir, dest_dir, filenames, recursive=False):
     all_files = []
