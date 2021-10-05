@@ -93,25 +93,21 @@ class ConfigManager():
         
         # Convert string to POSIX path
         self.config = {}
-        self.config['watch'] = {str(dest): self.stringListToPath(paths) for (dest, paths) in config['watch'].items()}
+        self.config['watch'] = {Path(dest): self.stringListToPath(paths) for (dest, paths) in config['watch'].items()}
         self.config['ignore'] = self.stringListToPath(config['ignore'])
 
-    def addWatchFiles(self, filenames, dest):
-        dest_str = str(dest)
-        
-        if dest_str in self.config['watch']:
+    def addWatchFiles(self, filenames, dest):        
+        if dest in self.config['watch']:
             for filename in filenames:
-                if not filename in self.config['watch'][dest_str]:
-                    self.config['watch'][dest_str].append(filename)
+                if not filename in self.config['watch'][dest]:
+                    self.config['watch'][dest].append(filename)
         else:
-            self.config['watch'][dest_str] = filenames
+            self.config['watch'][dest] = filenames
 
     def removeWatchFiles(self, filenames, dest):
-        dest_str = str(dest)
-
-        for filename in self.config['watch'][dest_str]:
+        for filename in self.config['watch'][dest]:
             if filename in filenames:
-                self.config['watch'][dest_str].remove(filename)
+                self.config['watch'][dest].remove(filename)
 
     def addIgnoreFiles(self, filenames):
         for filename in filenames:
@@ -176,7 +172,7 @@ def getCommandLineArgs():
     parser = argparse.ArgumentParser(description="""
         Provide a file or files to watch for changes. When a change is detected, copy
         the changed file to a target directory. For more complex watching and copying,
-        FileWatcher can be used set up a watch.config.json file to be used to define which
+        FileWatcher can be used set up a wac.config.json file to be used to define which
         files to watch and where to copy them to.
     """)
 
@@ -187,8 +183,7 @@ def getCommandLineArgs():
         help="""
             Search in subdirectories for files matching the source argument.
             Watched files in child directories will be copied to directories of the same name within the destination in order to
-            maintain the structure of the source directory. This behavior can be overridden by specifying target destinations
-            on per file basis in a configuration file.
+            maintain the structure of the source directory.
         """, 
         action='store_true'
     )
@@ -221,18 +216,21 @@ def getConfigManager(args, files):
     if not files:
         return config_manager
     
+    # Safe to assume there will be a valid destination at this point because otherwise files would be None or empty
+    dest = Path(args.dest)
+
     if args.add:
         if args.ignore:
             config_manager.addIgnoreFiles(files)
         else:
-            config_manager.addWatchFiles(files, args.dest)
+            config_manager.addWatchFiles(files, dest)
         
         config_manager.writeConfigFile()
     elif args.delete:
         if args.ignore:
             config_manager.removeIgnoreFiles(files)
         else:
-            config_manager.removeWatchFiles(files, args.dest)
+            config_manager.removeWatchFiles(files, dest)
         
         config_manager.writeConfigFile()
 
