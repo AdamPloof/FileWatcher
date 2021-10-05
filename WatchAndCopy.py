@@ -115,6 +115,7 @@ def main():
     if args.find and not args.dest:
         raise Exception('A destination must be provided for watch files.')
     elif not args.find and not args.dest:
+        # Calling the program with no positional args defaults to config mode
         args.conf = True
         files = []
     else:
