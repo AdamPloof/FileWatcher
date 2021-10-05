@@ -31,22 +31,22 @@ complex watching and copying, FileWatcher can be used set up a wac.config.json f
 and where to copy them to.
 
 positional arguments:\
-&nbsp;&nbsp;find                  The source directory to look for watch files in.\
-&nbsp;&nbsp;dest                  The target directory to copy the watched files to when changes are detected.
+&nbsp;&nbsp;&nbsp;&nbsp;find                  The source directory to look for watch files in.\
+&nbsp;&nbsp;&nbsp;&nbsp;dest                  The target directory to copy the watched files to when changes are detected.
 
 optional arguments:\
-&nbsp;&nbsp;-h, --help            show this help message and exit\
-&nbsp;&nbsp;-n NAME [NAME ...], --name NAME [NAME ...]\
+&nbsp;&nbsp;&nbsp;&nbsp;-h, --help            show this help message and exit\
+&nbsp;&nbsp;&nbsp;&nbsp;-n NAME [NAME ...], --name NAME [NAME ...]\
                         The name(s) of the files or pattern to use for finding files to watch.\
-&nbsp;&nbsp;-r, --recursive       Search in subdirectories for files matching the source argument. Watched files in child directories will\
-                        be copied to directories of the same name within the destination in order to maintain the structure of\
+&nbsp;&nbsp;&nbsp;&nbsp;-r, --recursive       Search in subdirectories for files matching the source argument. Watched files in child directories will
+                        be copied to directories of the same name within the destination in order to maintain the structure of
                         the source directory.\
-&nbsp;&nbsp;--conf                Start file watcher using settings in wac.config.json file to determine source files to watch and\
+&nbsp;&nbsp;&nbsp;&nbsp;--conf                Start file watcher using settings in wac.config.json file to determine source files to watch and
                         destinations to copy to.\
-&nbsp;&nbsp;-i, --ignore          This flag will add/remove files to/from the ignore list. Files in the ignore list will never be watched\
+&nbsp;&nbsp;&nbsp;&nbsp;-i, --ignore          This flag will add/remove files to/from the ignore list. Files in the ignore list will never be watched
                         for changes.\
-&nbsp;&nbsp;-a, --add             Add file(s) and destinations to config file watch-list/ignore-list\
-&nbsp;&nbsp;-d, --delete          Remove file(s) and destinations from config file watch-list/ignore-list\
+&nbsp;&nbsp;&nbsp;&nbsp;-a, --add             Add file(s) and destinations to config file watch-list/ignore-list\
+&nbsp;&nbsp;&nbsp;&nbsp;-d, --delete          Remove file(s) and destinations from config file watch-list/ignore-list\
 
 ## Running from a Config File
 To run WatchAndCopy using a wac.config.json file run the program with either the `--conf` argument or with no arguments (positional or optional) 
