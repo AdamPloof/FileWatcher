@@ -73,7 +73,6 @@ The structure of the wac.config.json is:
     "ignore": [
         "file3",
         "file4",
-        "dir3",
         ...
     ]
 }
