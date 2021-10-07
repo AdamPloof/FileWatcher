@@ -6,7 +6,7 @@ from FileChangeWatcher import FileChangeWatcher
 
 """
 ConfigManager handles reading and writing to and from a wac.config.json file.
-The config file stores a files to watch grouped by the destination that those files should be moved
+The config file stores a list files to watch grouped by the destination that those files should be moved
 to when changes are detected. The config file also stores a list of files that should be ignored. Files in the 
 ignore list will not be watched even if they are also in the watch list. This allows users to use broad patterns
 for adding files to the watch list (for example: "*") and then selectively omit certain files without having to edit the config file.
