@@ -5,7 +5,7 @@ from FileChangeWatcher import FileChangeWatcher
 from ConfigManager import ConfigManager
 
 """
-This script handles executing the WatchAndCopy (wac) script. It parses command line args, instantiates the FileWatcher or the ConfigManager
+This file is the entry point for the WatchAndCopy script. It parses command line args, instantiates the FileWatcher or the ConfigManager
 depending on the mode that the script is executed in (regular or configuration mode).
 
 One particularly important function in this file is getFilePaths which is used to find the files matching the pattern provided through the
@@ -31,12 +31,14 @@ def isDefaultIgnore(filepath, dest_dir):
 
     if '.git' in filepath.parts:
         is_default_ignore = True
-    elif dest_dir == filepath.parent:
-        is_default_ignore = True
     elif filepath.is_dir():
         is_default_ignore = True
     elif 'wac.config.json' == filepath:
         is_default_ignore = True
+
+    for parent in filepath.parents:
+        if parent == dest_dir:
+            is_default_ignore = True
 
     return is_default_ignore
         

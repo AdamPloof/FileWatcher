@@ -7,8 +7,8 @@ from FileChangeWatcher import FileChangeWatcher
 """
 ConfigManager handles reading and writing to and from a wac.config.json file.
 The config file stores a files to watch grouped by the destination that those files should be moved
-to when changes are detected. The config file also stores a list of files that should be ignored (i.e. not watched).
-Files in the ignore list will not be watched even if they are also in the watch list. This allows users to use broad patterns
+to when changes are detected. The config file also stores a list of files that should be ignored. Files in the 
+ignore list will not be watched even if they are also in the watch list. This allows users to use broad patterns
 for adding files to the watch list (for example: "*") and then selectively omit certain files without having to edit the config file.
 
 The ConfigManager can also be used to instantiate new FileWatchers and provide it with file lists and their copy destinations. 
@@ -29,7 +29,6 @@ Structure of config file is:
         "ignore": [
             "file3",
             "file4",
-            "dir3",
             ...
         ]
     }
@@ -88,6 +87,14 @@ class ConfigManager():
     def pathListToString(self, paths):
         return [str(path) for path in paths]
 
+    def isIgnoreFile(self, filename):
+        isIgnoreFile = False
+
+        if filename in self.config['ignore']:
+            isIgnoreFile = True
+        
+        return isIgnoreFile
+
     def writeConfigFile(self):
         # Convert POSIX paths to strings so that they can be serialized
         normalized_config = {}
@@ -99,6 +106,6 @@ class ConfigManager():
     
     def watch(self):
         for dest, files in self.config['watch'].items():
-            filtered_files = [file for file in files if not file in self.config['ignore']]
+            filtered_files = [file for file in files if not self.isIgnoreFile(file)]
             self.watcher.addWatchFiles(filtered_files, dest)
             self.watcher.startWatch()
