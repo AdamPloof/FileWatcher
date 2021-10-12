@@ -138,7 +138,3 @@ def main():
         watcher = FileChangeWatcher()
         watcher.addWatchFiles(files, dest_dir)
         watcher.startWatch()
-
-
-if __name__ == "__main__":
-    main()

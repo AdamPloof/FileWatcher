@@ -6,3 +6,4 @@ __pycache__/
 tests/
 Pipfile
 Pipfile.lock
+watch_and_copy.egg-info
