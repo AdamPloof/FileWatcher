@@ -2,7 +2,7 @@ import os
 import json
 from pathlib import Path
 
-from FileChangeWatcher import FileChangeWatcher
+from WatchAndCopy.FileChangeWatcher import FileChangeWatcher
 
 """
 ConfigManager handles reading and writing to and from a wac.config.json file.

@@ -1,8 +1,8 @@
 import argparse
 from pathlib import Path
 
-from FileChangeWatcher import FileChangeWatcher
-from ConfigManager import ConfigManager
+from WatchAndCopy.FileChangeWatcher import FileChangeWatcher
+from WatchAndCopy.ConfigManager import ConfigManager
 
 """
 This file is the entry point for the WatchAndCopy script. It parses command line args, instantiates the FileWatcher or the ConfigManager
