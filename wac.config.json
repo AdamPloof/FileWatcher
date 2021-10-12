@@ -1,9 +1,0 @@
-{
-	"watch": {
-		"Dest": [
-			"testfileX.txt",
-			"testfile1.txt"
-		]
-	},
-	"ignore": []
-}

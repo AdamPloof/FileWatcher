@@ -3,3 +3,6 @@ Dest\
 *.txt
 wac.config.json
 __pycache__/
+tests/
+Pipfile
+Pipfile.lock
