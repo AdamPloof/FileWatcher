@@ -1,4 +1,4 @@
-import shutil, time
+import shutil, time, sys
 from pathlib import Path
 
 """
@@ -21,13 +21,20 @@ class FileChangeWatcher():
         print(f"Watching files...")
 
         while True:
-            for dest, watch_files in self.watch_list.items():
-                for f in watch_files:
-                    self.checkForChanges(f, dest)
+            try:
+                self.scanWatchListForChanges()
+            except KeyboardInterrupt as e:
+                print("All done watching. Bye!")
+                sys.exit(0)
 
-            time.sleep(1)           
+            time.sleep(1)
+    
+    def scanWatchListForChanges(self):
+        for dest, watch_files in self.watch_list.items():
+            for f in watch_files:
+                self.checkFileForChanges(f, dest)
 
-    def checkForChanges(self, watch_file, dest):
+    def checkFileForChanges(self, watch_file, dest):
         modified_time = watch_file['file'].stat().st_mtime
         if modified_time != watch_file['cached_mod_time']:
             if watch_file['cached_mod_time'] != 0:
