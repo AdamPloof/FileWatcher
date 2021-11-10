@@ -23,11 +23,10 @@ class FileChangeWatcher():
         while True:
             try:
                 self.scanWatchListForChanges()
+                time.sleep(1)
             except KeyboardInterrupt as e:
                 print("All done watching. Bye!")
                 sys.exit(0)
-
-            time.sleep(1)
     
     def scanWatchListForChanges(self):
         for dest, watch_files in self.watch_list.items():
